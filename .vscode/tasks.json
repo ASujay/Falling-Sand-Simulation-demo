@@ -1,0 +1,17 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Odin Build",
+            "type": "shell",
+            "command": "odin",
+            "args": ["build", ".", "-out:app", "-debug"]
+        },
+        {
+            "label": "run",
+            "type": "shell",
+            "command": "odin",
+            "args": ["run", ".", "-debug"]
+        }
+    ]
+}
