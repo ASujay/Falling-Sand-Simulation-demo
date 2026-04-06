@@ -47,6 +47,7 @@ Cell :: struct {
     density: i32,
     motion_direction: MotionDirection,
 }
+
 GameState :: struct {
     cells: [GRID_WIDTH * GRID_HEIGHT]Matter,
     pointer_cell_matter: Matter,
@@ -58,14 +59,40 @@ DATA_EMPTY  : Cell : { type = .EMPTY,   state = nil,        density = EMPTY_DENS
 
 handle_sand_movement :: proc(state: ^GameState, cell_matter: Matter, x, y: int) {
     // sand wants to move down, down left, down right
-    down_cell       := get_cell(state, x, y + 1) 
+    down_cell       := get_cell(state, x, y + 1)
+    left_cell       := get_cell(state, x - 1, y)
+    right_cell      := get_cell(state, x + 1, y)
+    down_2_cell     := get_cell(state, x, y + 2) 
     down_left_cell  := get_cell(state, x - 1, y + 1)
     down_right_cell := get_cell(state, x + 1, y + 1)
 
-    if down_cell == .EMPTY || down_cell == .WATER {
-        state.cells[y * GRID_WIDTH + x] = down_cell
-        state.cells[(y + 1) * GRID_WIDTH + x] = .SAND        
-        return
+    if down_cell != .INVALID {
+        if down_cell == .EMPTY {
+            state.cells[y * GRID_WIDTH + x] = .EMPTY
+            state.cells[(y + 1) * GRID_WIDTH + x] = .SAND
+            return        
+        }
+        
+        if down_cell == .WATER {
+            if down_2_cell == .SAND {
+                if left_cell == .EMPTY {
+                    state.cells[y * GRID_WIDTH + x] = .EMPTY
+                    state.cells[y * GRID_WIDTH + x - 1] = .WATER
+                    state.cells[(y + 1) * GRID_WIDTH + x] = .SAND
+                } else if right_cell == .EMPTY {
+                    state.cells[y * GRID_WIDTH + x] = .EMPTY
+                    state.cells[y * GRID_WIDTH + x + 1] = .WATER
+                    state.cells[(y + 1) * GRID_WIDTH + x] = .SAND
+                } else {
+                    state.cells[y * GRID_WIDTH + x] = .WATER
+                    state.cells[(y + 1) * GRID_WIDTH + x] = .SAND
+                }
+            } else {
+                state.cells[y * GRID_WIDTH + x] = .WATER
+                state.cells[(y + 1) * GRID_WIDTH + x] = .SAND
+            }
+            return
+        }
     }
 
     should_go_left := rand.int63() % 2 == 0
