@@ -1,1 +1,3 @@
 app.dSYM/
+*.exe
+*.pdb

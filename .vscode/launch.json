@@ -2,15 +2,29 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "(lldb) Launch",
+            "name": "Launch ${workspaceFolderBasename}/app",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/app",
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "externalConsole": false,
-            "MIMode": "lldb",
-            "preLaunchTask": "Odin Build"
+            "preLaunchTask": "Odin Build",
+            "linux": {
+                "MIMode": "lldb"
+            },
+            "osx": {
+                "MIMode": "lldb"
+            },
+        },
+        {
+            "name": "Launch (MSVC)",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/app.exe",
+            "cwd": "${workspaceFolder}",
+            "stopAtEntry": false,
+            "preLaunchTask": "Odin Build",
         }
     ]
 }
